@@ -7,5 +7,5 @@ if __name__ == "__main__":
 
     app = QtWidgets.QApplication(sys.argv)
     MainWindow = MainMenu()
-    MainWindow.showFullScreen()
+    MainWindow.showNormal()
     sys.exit(app.exec_())

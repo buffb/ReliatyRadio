@@ -16,7 +16,7 @@ class DatabaseController:
         self.db = db
         self.db.bind(provider='sqlite', filename='database.sqlite', create_db=True)
         self.db.generate_mapping(check_tables=True, create_tables=True)
-        # self.populate_database()
+        #self.populate_database()
 
     def get_radio_stations(self):
         yield Webradio.select()

@@ -1,2 +1,0 @@
-Drehschalter, GPIO2,GPIO3,P3,P5
-

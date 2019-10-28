@@ -3,16 +3,34 @@
 # Created by: PyQt5 UI code generator 5.13.1
 #
 # WARNING! All changes made in this file will be lost!
+import time
 
-
+import vlc
 from PyQt5 import QtCore, QtGui, QtWidgets
 
 
 class WebradioPlayer(QtWidgets.QWidget):
 
-    def __init__(self, parent=None):
+    def __init__(self, parent=None, webradio=None):
         super().__init__(parent)
         self.setupUi()
+        self.name = webradio.name
+        self.url = webradio.url
+        #self.icon =webradio.icon
+
+        self.player = vlc.MediaPlayer(self.url)
+
+    def open_stream(self):
+        """Opens the radio stream
+        """
+        # Set the title of the track as window title
+        # The media player has to be 'connected' to the QFrame (otherwise the
+        # video would be displayed in it's own window). This is platform
+        # specific, so we must give the ID of the QFrame (or similar object) to
+        # vlc. Different platforms have different functions for thi
+
+        self.player.play()
+        time.sleep(20)
 
     def setupUi(self):
         self.setObjectName("Webradio Player")

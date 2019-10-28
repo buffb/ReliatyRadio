@@ -3,10 +3,8 @@ from multiprocessing import Manager
 from pathos.pools import ProcessPool as Pool
 
 import requests
-from PIL import Image
 
-from DatabaseController import DatabaseController,Webradio,db_session,Genre
-
+from DatabaseController import DatabaseController, Webradio, db_session, Genre
 
 
 class CrawlerController():
@@ -23,11 +21,13 @@ class Crawler(object):
     def crawl(self):
         pass
 
+
 class RadiodeCrawler(Crawler):
     def __init__(self):
         super().__init__()
         self.address = ""
         # self.api = "ia9p4XYXmOPEtXzL"
+
 
 class RadioBrowserCrawler(Crawler):
     def __init__(self):
@@ -39,17 +39,17 @@ class RadioBrowserCrawler(Crawler):
     def crawl(self):
         resp = requests.get(url=self.address)
         data = resp.json()
-        self.amount= len(data)
+        self.amount = len(data)
         m = Manager()
         self.lock = m.RLock()
-        self.counter = m.Value(int,0)
+        self.counter = m.Value(int, 0)
         with Pool(1) as p:
-            p.map(self.process_station,data)
+            p.map(self.process_station, data)
 
-    def process_station(self,station):
+    def process_station(self, station):
 
         self.lock.acquire(True)
-        self.counter.set(self.counter.get()+1)
+        self.counter.set(self.counter.get() + 1)
         print(str(self.counter.get()) + "/" + str(self.amount))
         self.lock.release()
 
@@ -57,9 +57,9 @@ class RadioBrowserCrawler(Crawler):
         url = station["url"]
 
         tags = station["tags"].split(",")
-        genres= []
+        genres = []
         for genre in tags:
-            if genre == "" or len(genre)>100: continue
+            if genre == "" or len(genre) > 100: continue
             if not Genre.get(name=genre):
                 self.lock.acquire(True)
                 genres.append(Genre(name=genre))

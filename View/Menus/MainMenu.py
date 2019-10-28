@@ -10,6 +10,7 @@ from PyQt5.QtWidgets import QStackedLayout, QMainWindow
 
 from View.Menus.SettingsMenu import SettingsMenu
 from View.Menus.WebradioMenu import WebradioMenu
+from WebradioPlayer import WebradioPlayer
 
 
 class MainMenu(QMainWindow):
@@ -37,6 +38,11 @@ class MainMenu(QMainWindow):
 
     def show(self):
         self.layout.setCurrentWidget(self.listWidget)
+
+    def show_player(self, webradio):
+        player = WebradioPlayer(webradio=webradio)
+        self.layout.addWidget(player)
+        self.layout.setCurrentWidget(player)
 
     def __init__(self):
         super().__init__()

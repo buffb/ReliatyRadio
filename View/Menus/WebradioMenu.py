@@ -1,6 +1,7 @@
 from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.QtWidgets import QHBoxLayout, QStackedLayout
 
+import WebradioPlayer
 from Model.DatabaseController import DatabaseController, db_session
 from View.CallableListItem import CallableListItem
 from View.Menus import MainMenu
@@ -52,11 +53,20 @@ class WebradioMenu(QtWidgets.QWidget):
     def show_genres(self):
         with db_session:
             items = self.db.get_genres_by_count()
-            itemlist= [CallableListItem(name=g.name, item=self.show_stations_by_genre(), params=[g.name])for g in items]
+            itemlist= [CallableListItem(name=g.name, item=self.show_stations_by_genre, params=[g.name])for g in items]
             self.clearAndSetMenu(itemlist)
 
     def show_stations_by_genre(self):
-        pass
+        item = self.listWidget.currentItem()
+        with db_session:
+            genre = item.params[0]
+            stations = self.db.get_radio_stations_by_genre(genre)
+            items = [CallableListItem(name=s.name, item=self.show_player, params=s) for s in stations]
+            self.clearAndSetMenu(items)
+
+    def show_player(self):
+        item = self.listWidget.currentItem()
+        self.main_menu.show_player(item.params)
 
     def clearAndSetMenu(self, items):
         self.listWidget.clear()

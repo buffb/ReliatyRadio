@@ -1,2 +1,5 @@
 pathos
 pony
+PyQt5
+requests
+python-vlc
