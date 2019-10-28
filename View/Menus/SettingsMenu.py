@@ -10,8 +10,8 @@ from PyQt5.QtWidgets import QWidget
 
 
 class SettingsMenu(QWidget):
-    def __init__(self):
-        super().__init__()
+    def __init__(self,main_menu,parent=None):
+        super().__init__(parent)
         self.centralwidget = QtWidgets.QWidget()
         self.centralwidget.setObjectName("centralwidget")
         self.tabWidget = QtWidgets.QTabWidget(self.centralwidget)

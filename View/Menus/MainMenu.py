@@ -29,14 +29,16 @@ class MainMenu(QMainWindow):
     def create_submenu(self, index):
         item = index.row()
         print(item)
-        if item == 0:  self.layout.addWidget(WebradioMenu())
-        if item == 1: self.layout.addWidget(SettingsMenu())
+        if item == 0:  self.layout.addWidget(WebradioMenu(self))
+        if item == 1: self.layout.addWidget(SettingsMenu(self))
         if item == 2: sys.exit(1)
 
         self.layout.setCurrentIndex(self.layout.count() - 1)
 
-    def __init__(self):
+    def show(self):
+        self.layout.setCurrentWidget(self.listWidget)
 
+    def __init__(self):
         super().__init__()
         # This holds the layouts for all subsequent menu views
         self.centralwidget = QtWidgets.QWidget()
@@ -80,9 +82,9 @@ class MainMenu(QMainWindow):
         self.listWidget.setSelectionRectVisible(True)
         self.listWidget.setObjectName("listWidget")
         item = QtWidgets.QListWidgetItem(self.listWidget)
+        item = QtWidgets.QListWidgetItem(self.listWidget)
+        item = QtWidgets.QListWidgetItem(self.listWidget)
         self.listWidget.clicked.connect(self.create_submenu)
-        item = QtWidgets.QListWidgetItem(self.listWidget)
-        item = QtWidgets.QListWidgetItem(self.listWidget)
 
         self.retranslate_ui()
 
@@ -102,3 +104,5 @@ class MainMenu(QMainWindow):
 
         self.listWidget.setSizePolicy(sizePolicy)
         self.centralwidget.setSizePolicy(sizePolicy)
+
+
