@@ -1,0 +1,39 @@
+<!DOCTYPE RCC><RCC version="1.0">
+
+<qresource>
+
+    	<file>icons/radio.png</file>
+
+	<file>icons/settings.png</file>
+
+	<file>icons/pause.png</file>
+    	
+	<file>icons/play.png</file>
+    	
+	<file>icons/volume.png</file>
+    	
+	<file>icons/mute.png</file>
+	
+	<file>icons/home.png</file>
+		
+	<file>icons/mute.png</file>
+	
+<file>icons/logo.png</file>
+    
+	<file>icons/full-screen.png</file>
+
+	<file>icons/forward.png</file>
+
+	<file>icons/backward.png</file>
+
+	<file>icons/down.png</file>
+
+	<file>icons/search.png</file>
+
+	<file>icons/wlan.png</file>
+
+
+
+	
+</qresource>
+</RCC>
