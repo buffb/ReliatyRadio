@@ -1,3 +1,5 @@
+from datetime import datetime
+
 from pony.orm import *
 
 db = Database()
@@ -19,7 +21,7 @@ class DatabaseController:
         #self.populate_database()
 
     def get_radio_stations(self):
-        yield Webradio.select()
+        return Webradio.select()
 
     def get_radio_stations_by_popularity(self):
         return Webradio.select().order_by(desc(Webradio.popularity))
@@ -36,6 +38,10 @@ class DatabaseController:
         if amount == 0:
             return genres[:]
         return genres[:amount:]
+
+    def get_stations_by_last_played(self):
+        return Webradio.select().order_by(desc(Webradio.last_played),desc(Webradio.popularity))
+
 
     @db_session
     def populate_database(self):
@@ -58,11 +64,9 @@ class Webradio(db.Entity):
     genres = Set('Genre', column='genres')
     url = Required(str, 500, column='url')
     icon = Optional(bytes, column='icon', lazy=True)
-    country = Optional(str, 50, column='country')
-    state = Optional(str, 50)
-    language = Optional(str, 50, column='language')
-    id = Optional(str)
-    popularity = Optional(int, column="popularity")
+    last_played = Optional(datetime,column="last_played")
+    playcount = Optional(int,column="playcount",default=0)
+    popularity = Optional(int, column="popularity",default=0)
 
     @property
     def has_genres(self):

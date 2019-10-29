@@ -4,7 +4,7 @@ from PyQt5.QtWidgets import QHBoxLayout, QStackedLayout
 import WebradioPlayer
 from Model.DatabaseController import DatabaseController, db_session
 from View.CallableListItem import CallableListItem
-from View.Menus import MainMenu
+from View.Menus import MainMenu_old
 
 
 class WebradioMenu(QtWidgets.QWidget):

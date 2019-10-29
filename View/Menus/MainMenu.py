@@ -1,114 +1,94 @@
-# Form implementation generated from reading ui file 'MainMenu.ui'
+# -*- coding: utf-8 -*-
+
+# Form implementation generated from reading ui file 'home.ui'
 #
 # Created by: PyQt5 UI code generator 5.13.1
 #
 # WARNING! All changes made in this file will be lost!
-import sys
+
 
 from PyQt5 import QtCore, QtGui, QtWidgets
-from PyQt5.QtWidgets import QStackedLayout, QMainWindow
 
-from View.Menus.SettingsMenu import SettingsMenu
-from View.Menus.WebradioMenu import WebradioMenu
-from WebradioPlayer import WebradioPlayer
+from Menus.SettingsMenu import SettingsMenu
+from Menus.StationListPicker import StationListPicker
+from Resources.resources_rc import *
 
 
-class MainMenu(QMainWindow):
+class MainMenu(QtWidgets.QWidget):
+    def __init__(self, parent=None):
+        super().__init__(parent)
+        self.setup_ui()
 
-    def retranslate_ui(self):
-        _translate = QtCore.QCoreApplication.translate
-        self.setWindowTitle(_translate("main_window", "Reliaty Radio"))
-        self.listWidget.setSortingEnabled(False)
+    def setup_ui(self):
 
-        item = self.listWidget.item(0)
-        item.setText(_translate("main_window", "Webradio"))
-        item = self.listWidget.item(1)
-        item.setText(_translate("main_window", "Einstellungen"))
-        item = self.listWidget.item(2)
-        item.setText(_translate("main_window", "Exit"))
+        icon = QtGui.QIcon()
+        icon.addPixmap(QtGui.QPixmap(":/icons/radio.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        self.setWindowIcon(icon)
+        self.setToolTipDuration(-5)
+        self.setStyleSheet("background-color: rgb(255, 255, 255);")
+        self.centralwidget = QtWidgets.QWidget(self)
 
-    def create_submenu(self, index):
-        item = index.row()
-        print(item)
-        if item == 0:  self.layout.addWidget(WebradioMenu(self))
-        if item == 1: self.layout.addWidget(SettingsMenu(self))
-        if item == 2: sys.exit(1)
+        self.horizontalLayoutWidget = QtWidgets.QWidget(self.centralwidget)
+        self.horizontalLayoutWidget.setGeometry(QtCore.QRect(0, 0, 1024, 768))
+        self.horizontalLayoutWidget.setObjectName("horizontalLayoutWidget")
 
-        self.layout.setCurrentIndex(self.layout.count() - 1)
+        self.horizontalLayout_2 = QtWidgets.QHBoxLayout(self.horizontalLayoutWidget)
+        self.horizontalLayout_2.setContentsMargins(0, 0, 0, 0)
+        self.horizontalLayout_2.setObjectName("horizontalLayout_2")
 
-    def show(self):
-        self.layout.setCurrentWidget(self.listWidget)
+        self.toolButton_player = QtWidgets.QToolButton(self.horizontalLayoutWidget)
+        self.toolButton_player.setStyleSheet("QToolButton{\n"
+                                             "border: none ;\n"
+                                             "background: transparent ;\n"
+                                             "}\n"
+                                             "\n"
+                                             "QToolButton:pressed{\n"
+                                             "background-color : rgb(255, 255, 255)\n"
+                                             "}\n"
+                                             "\n"
+                                             "")
+        self.toolButton_player.setIcon(icon)
+        self.toolButton_player.setIconSize(QtCore.QSize(300, 300))
+        self.toolButton_player.setObjectName("toolButton_player")
+        self.horizontalLayout_2.addWidget(self.toolButton_player)
 
-    def show_player(self, webradio):
-        player = WebradioPlayer(webradio=webradio)
-        self.layout.addWidget(player)
-        self.layout.setCurrentWidget(player)
+        self.toolButton_settings = QtWidgets.QToolButton(self.horizontalLayoutWidget)
+        self.toolButton_settings.setStyleSheet("QToolButton{\n"
+                                               "border: none ;\n"
+                                               "background: transparent ;\n"
+                                               "}\n"
+                                               "\n"
+                                               "QToolButton:pressed{\n"
+                                               "background-color : rgb(255, 255, 255)\n"
+                                               "}\n"
+                                               "\n"
+                                               "")
+        icon1 = QtGui.QIcon()
+        icon1.addPixmap(QtGui.QPixmap(":/icons/settings.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        self.toolButton_settings.setIcon(icon1)
+        self.toolButton_settings.setIconSize(QtCore.QSize(300, 300))
+        self.toolButton_settings.setObjectName("toolButton_settings")
+        self.horizontalLayout_2.addWidget(self.toolButton_settings)
 
-    def __init__(self):
-        super().__init__()
-        # This holds the layouts for all subsequent menu views
-        self.centralwidget = QtWidgets.QWidget()
-        self.layout = QStackedLayout()
-        self.centralwidget.setLayout(self.layout)
-        self.setCentralWidget(self.centralwidget)
-        # Create initial layout of the main menu
-        self.setObjectName("MainMenu")
-        self.resize(1024, 768)
-
-        font = QtGui.QFont()
-        font.setFamily("Calibri")
-        font.setPointSize(21)
-        font.setBold(False)
-        font.setWeight(50)
-        font.setKerning(True)
-        font.setStyleStrategy(QtGui.QFont.PreferDefault)
-
-        self.centralwidget.setObjectName("centralwidget")
-        self.listWidget = QtWidgets.QListWidget()
-        self.layout.addWidget(self.listWidget)
-        self.listWidget.setGeometry(QtCore.QRect(0, 0, 1024, 768))
-
-        self.listWidget.setFont(font)
-        # self.listWidget.viewport().setProperty("cursor", QtGui.QCursor(QtCore.Qt.BlankCursor))
-        self.listWidget.setFrameShadow(QtWidgets.QFrame.Plain)
-        self.listWidget.setLineWidth(1)
-        self.listWidget.setCurrentRow(-1)
-        self.listWidget.setEditTriggers(QtWidgets.QAbstractItemView.DoubleClicked)
-        self.listWidget.setProperty("showDropIndicator", False)
-        self.listWidget.setAlternatingRowColors(False)
-        self.listWidget.setTextElideMode(QtCore.Qt.ElideLeft)
-        self.listWidget.setMovement(QtWidgets.QListView.Static)
-        self.listWidget.setFlow(QtWidgets.QListView.TopToBottom)
-        self.listWidget.setProperty("isWrapping", False)
-        self.listWidget.setResizeMode(QtWidgets.QListView.Adjust)
-        self.listWidget.setLayoutMode(QtWidgets.QListView.SinglePass)
-        self.listWidget.setViewMode(QtWidgets.QListView.ListMode)
-        self.listWidget.setUniformItemSizes(False)
-        self.listWidget.setWordWrap(False)
-        self.listWidget.setSelectionRectVisible(True)
-        self.listWidget.setObjectName("listWidget")
-        item = QtWidgets.QListWidgetItem(self.listWidget)
-        item = QtWidgets.QListWidgetItem(self.listWidget)
-        item = QtWidgets.QListWidgetItem(self.listWidget)
-        self.listWidget.clicked.connect(self.create_submenu)
-
-        self.retranslate_ui()
-
-        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Fixed)
+        self.label_logo = QtWidgets.QLabel(self.centralwidget)
+        self.label_logo.setGeometry(QtCore.QRect(20, 10, 411, 111))
+        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Preferred, QtWidgets.QSizePolicy.Preferred)
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
-        sizePolicy.setHeightForWidth(self.sizePolicy().hasHeightForWidth())
-        self.setSizePolicy(sizePolicy)
-        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Maximum, QtWidgets.QSizePolicy.Maximum)
-        sizePolicy.setHorizontalStretch(0)
-        sizePolicy.setVerticalStretch(0)
-        sizePolicy.setHeightForWidth(self.centralwidget.sizePolicy().hasHeightForWidth())
-        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Maximum, QtWidgets.QSizePolicy.Maximum)
-        sizePolicy.setHorizontalStretch(2)
-        sizePolicy.setVerticalStretch(3)
-        sizePolicy.setHeightForWidth(self.listWidget.sizePolicy().hasHeightForWidth())
+        sizePolicy.setHeightForWidth(self.label_logo.sizePolicy().hasHeightForWidth())
+        self.label_logo.setSizePolicy(sizePolicy)
+        self.label_logo.setStyleSheet("image: url(:/icons/logo.png);")
+        self.label_logo.setText("")
+        self.label_logo.setObjectName("label_logo")
 
-        self.listWidget.setSizePolicy(sizePolicy)
-        self.centralwidget.setSizePolicy(sizePolicy)
+        self.toolButton_settings.clicked.connect(self.show_settings)
+        self.toolButton_player.clicked.connect(self.show_webradio)
 
-
+    def show_settings(self):
+        widget = SettingsMenu()
+        self.nativeParentWidget().add_and_show_widget(widget)
+        widget.btn_home.clicked.connect(self.nativeParentWidget().go_back)
+    def show_webradio(self):
+        widget = StationListPicker()
+        self.nativeParentWidget().add_and_show_widget(widget)
+        #TODO Back Button

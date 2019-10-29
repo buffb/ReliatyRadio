@@ -9,15 +9,24 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1060</width>
-    <height>624</height>
+    <width>1024</width>
+    <height>768</height>
    </rect>
+  </property>
+  <property name="sizePolicy">
+   <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+    <horstretch>0</horstretch>
+    <verstretch>0</verstretch>
+   </sizepolicy>
+  </property>
+  <property name="contextMenuPolicy">
+   <enum>Qt::NoContextMenu</enum>
   </property>
   <property name="windowTitle">
    <string>MainWindow</string>
   </property>
   <property name="windowIcon">
-   <iconset resource="resources.qrc">
+   <iconset resource="../../Resources/resources.qrc">
     <normaloff>:/icons/radio.png</normaloff>:/icons/radio.png</iconset>
   </property>
   <property name="toolTipDuration">
@@ -33,12 +42,25 @@
       <x>10</x>
       <y>140</y>
       <width>1042</width>
-      <height>311</height>
+      <height>505</height>
      </rect>
     </property>
     <layout class="QHBoxLayout" name="horizontalLayout_2">
      <item>
       <spacer name="horizontalSpacer_2">
+       <property name="orientation">
+        <enum>Qt::Horizontal</enum>
+       </property>
+       <property name="sizeHint" stdset="0">
+        <size>
+         <width>40</width>
+         <height>20</height>
+        </size>
+       </property>
+      </spacer>
+     </item>
+     <item>
+      <spacer name="horizontalSpacer">
        <property name="orientation">
         <enum>Qt::Horizontal</enum>
        </property>
@@ -68,7 +90,7 @@ background-color : rgb(255, 255, 255)
         <string>...</string>
        </property>
        <property name="icon">
-        <iconset resource="resources.qrc">
+        <iconset resource="../../Resources/resources.qrc">
          <normaloff>:/icons/settings.png</normaloff>:/icons/settings.png</iconset>
        </property>
        <property name="iconSize">
@@ -78,19 +100,6 @@ background-color : rgb(255, 255, 255)
         </size>
        </property>
       </widget>
-     </item>
-     <item>
-      <spacer name="horizontalSpacer">
-       <property name="orientation">
-        <enum>Qt::Horizontal</enum>
-       </property>
-       <property name="sizeHint" stdset="0">
-        <size>
-         <width>40</width>
-         <height>20</height>
-        </size>
-       </property>
-      </spacer>
      </item>
      <item>
       <widget class="QToolButton" name="toolButton_player">
@@ -110,7 +119,7 @@ background-color : rgb(255, 255, 255)
         <string>...</string>
        </property>
        <property name="icon">
-        <iconset resource="resources.qrc">
+        <iconset resource="../../Resources/resources.qrc">
          <normaloff>:/icons/radio.png</normaloff>:/icons/radio.png</iconset>
        </property>
        <property name="iconSize">
@@ -139,11 +148,17 @@ background-color : rgb(255, 255, 255)
    <widget class="QLabel" name="label_logo">
     <property name="geometry">
      <rect>
-      <x>9</x>
-      <y>9</y>
-      <width>221</width>
-      <height>81</height>
+      <x>20</x>
+      <y>10</y>
+      <width>411</width>
+      <height>111</height>
      </rect>
+    </property>
+    <property name="sizePolicy">
+     <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+      <horstretch>0</horstretch>
+      <verstretch>0</verstretch>
+     </sizepolicy>
     </property>
     <property name="styleSheet">
      <string notr="true">image: url(:/icons/logo.png);</string>
@@ -156,7 +171,7 @@ background-color : rgb(255, 255, 255)
   <widget class="QStatusBar" name="statusbar"/>
  </widget>
  <resources>
-  <include location="resources.qrc"/>
+  <include location="../../Resources/resources.qrc"/>
  </resources>
  <connections/>
 </ui>

@@ -2,25 +2,24 @@
 
 <qresource>
 
-    	<file>icons/radio.png</file>
+	<file>icons/radio.png</file>
 
 	<file>icons/settings.png</file>
 
 	<file>icons/pause.png</file>
-    	
+
 	<file>icons/play.png</file>
-    	
+
 	<file>icons/volume.png</file>
-    	
+
 	<file>icons/mute.png</file>
-	
+
 	<file>icons/home.png</file>
-		
+
 	<file>icons/mute.png</file>
-	
-<file>icons/logo.png</file>
-    
-	<file>icons/full-screen.png</file>
+
+	<file>icons/logo.png</file>
+
 
 	<file>icons/forward.png</file>
 
@@ -32,8 +31,15 @@
 
 	<file>icons/wlan.png</file>
 
+	<file>icons/senderauswahlX.png</file>
+	<file>icons/fav1.png</file>
+	<file>icons/fav2.png</file>
+	<file>icons/fav3.png</file>
+	<file>icons/fav4.png</file>
+	<file>icons/c175.png</file>
 
 
-	
+
+
 </qresource>
 </RCC>
