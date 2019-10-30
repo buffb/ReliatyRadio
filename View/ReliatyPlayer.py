@@ -1,36 +1,37 @@
-# -*- coding: utf-8 -*-
-
-# Form implementation generated from reading ui file 'player.ui'
-#
-# Created by: PyQt5 UI code generator 5.13.1
-#
-# WARNING! All changes made in this file will be lost!
 from datetime import datetime
 
-import vlc
+#import vlc
 from PyQt5 import QtCore, QtGui, QtWidgets
-from PyQt5.QtGui import QImage, QPixmap, QIcon
 
-import Resources.resources_rc
-from DatabaseController import DatabaseController, db_session, Webradio
+from Model.DatabaseController import DatabaseController, db_session, Webradio
+from Controller.PlayerGpioController import PlayerGpioController
+from View.Menus.StationListPicker import StationListPicker
 from Util import QIconHelper
 
 
 class ReliatyPlayer(QtWidgets.QWidget):
-    def __init__(self, parent=None, station=None):
+    def __init__(self, parent=None):
         super().__init__()
 
         self.db = DatabaseController.get_instance()
+        #self.gpio = PlayerGpioController()
+        #self.gpio.controller.switch_callback = self.play_pause
+
+        self.player = vlc.MediaPlayer()
 
         self.centralwidget = QtWidgets.QWidget(self)
         self.centralwidget.setGeometry(QtCore.QRect(0, 0, 1024, 768))
         self.centralwidget.setStyleSheet("background-color: rgb(255, 255, 255);")
-        self.station = station
+
         self.setup_ui()
+
+        #Start with last played station
+        with db_session:
+            station= self.db.get_stations_by_last_played().first()
+            self.change_station(station)
         self.setup_buttons()
-        self.player = vlc.MediaPlayer()
-        self.setup_player()
         self.populate_wigets()
+
 
     def setup_ui(self):
         self.centralwidget.setStyleSheet("background-color: rgb(255, 255, 255);")
@@ -49,13 +50,13 @@ class ReliatyPlayer(QtWidgets.QWidget):
         icon = QtGui.QIcon()
         icon.addPixmap(QtGui.QPixmap(":icons/home.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         self.toolButton_home.setIcon(icon)
-        self.toolButton_home.setIconSize(QtCore.QSize(100, 100))
+        self.toolButton_home.setIconSize(QtCore.QSize(50, 50))
         self.toolButton_home.setObjectName("toolButton_home")
 
-        self.horizontalSlider = QtWidgets.QSlider(self.centralwidget)
-        self.horizontalSlider.setGeometry(QtCore.QRect(130, 400, 831, 21))
-        self.horizontalSlider.setOrientation(QtCore.Qt.Horizontal)
-        self.horizontalSlider.setObjectName("horizontalSlider")
+        # self.horizontalSlider = QtWidgets.QSlider(self.centralwidget)
+        # self.horizontalSlider.setGeometry(QtCore.QRect(130, 400, 831, 21))
+        # self.horizontalSlider.setOrientation(QtCore.Qt.Horizontal)
+        # self.horizontalSlider.setObjectName("horizontalSlider")
 
         self.label_logo = QtWidgets.QLabel(self.centralwidget)
         self.label_logo.setGeometry(QtCore.QRect(100, 10, 221, 51))
@@ -88,6 +89,7 @@ class ReliatyPlayer(QtWidgets.QWidget):
         icon1.addPixmap(QtGui.QPixmap(":icons/pause.png"), QtGui.QIcon.Normal, QtGui.QIcon.On)
 
         self.toolButton_play.setIcon(icon1)
+        self.toolButton_play.setCheckable(True)
         self.toolButton_play.setIconSize(QtCore.QSize(200, 200))
         self.toolButton_play.setObjectName("toolButton_play")
         self.horizontalLayout.addWidget(self.toolButton_play)
@@ -105,8 +107,9 @@ class ReliatyPlayer(QtWidgets.QWidget):
                                            "")
         icon2 = QtGui.QIcon()
         icon2.addPixmap(QtGui.QPixmap(":icons/mute.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
-        icon2.addPixmap(QtGui.QPixmap(":icons/pause.png"), QtGui.QIcon.Normal, QtGui.QIcon.On)
+        icon2.addPixmap(QtGui.QPixmap(":icons/unmute.png"), QtGui.QIcon.Normal, QtGui.QIcon.On)
 
+        self.toolButton_mute.setCheckable(True)
         self.toolButton_mute.setIcon(icon2)
         self.toolButton_mute.setIconSize(QtCore.QSize(200, 200))
         self.toolButton_mute.setObjectName("toolButton_mute")
@@ -259,10 +262,11 @@ class ReliatyPlayer(QtWidgets.QWidget):
         self.toolButton_play.clicked.connect(self.play_pause)
         self.toolButton_mute.clicked.connect(self.mute_unmute)
         self.toolButton_home.clicked.connect(self.go_home)
-        self.toolButton_senderwahl.clicked.connect(self.go_back)
+        self.toolButton_senderwahl.clicked.connect(self.open_station_picker)
 
-    def go_back(self):
-        pass
+    def open_station_picker(self):
+        self.nativeParentWidget().add_and_show_widget(StationListPicker(player=self))
+
 
     def go_home(self):
         self.player.release()
@@ -271,8 +275,10 @@ class ReliatyPlayer(QtWidgets.QWidget):
     def play_pause(self):
         if self.player.is_playing() == 0:
             self.player.play()
+            self.toolButton_play.setChecked(True)
         else:
             self.player.pause()
+            self.toolButton_play.setChecked(False)
 
     def mute_unmute(self):
         self.player.audio_toggle_mute()

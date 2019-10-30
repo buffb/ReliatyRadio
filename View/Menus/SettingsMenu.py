@@ -1,24 +1,15 @@
-# -*- coding: utf-8 -*-
-
-# self.centralwidget implementation generated from reading ui file 'settings.ui'
-#
-# Created by: PyQt5 UI code generator 5.13.1
-#
-# WARNING! All changes made in this file will be lost!
-
-
 from PyQt5 import QtCore, QtGui, QtWidgets
-from PyQt5.QtCore import pyqtSignal
+from wifi import Cell
 
-import Resources.resources_rc
+from Controller.Settings.SchemeWPA import SchemeWPA
 
 
 class SettingsMenu(QtWidgets.QWidget):
 
-
     def __init__(self, parent=None):
         super().__init__(parent)
         self.setup_ui()
+        self.btn_wifi__connect.clicked.connect(self.connect_wifi)
 
     def setup_ui(self):
         self.setEnabled(True)
@@ -30,7 +21,7 @@ class SettingsMenu(QtWidgets.QWidget):
         self.setStyleSheet("background-color: rgb(255, 255, 255);")
         self.centralwidget = QtWidgets.QWidget(self)
         self.centralwidget.setGeometry(QtCore.QRect(0, 0, 1024, 768))
-                
+
         self.label_logo = QtWidgets.QLabel(self.centralwidget)
         self.label_logo.setGeometry(QtCore.QRect(100, 10, 221, 81))
         self.label_logo.setStyleSheet("image: url(:/icons/logo.png);")
@@ -39,22 +30,21 @@ class SettingsMenu(QtWidgets.QWidget):
         self.btn_home = QtWidgets.QToolButton(self.centralwidget)
         self.btn_home.setGeometry(QtCore.QRect(10, 10, 81, 71))
         self.btn_home.setStyleSheet("QToolButton{\n"
-                                           "border: none ;\n"
-                                           "background: transparent ;\n"
-                                           "}\n"
-                                           "\n"
-                                           "QToolButton:pressed{\n"
-                                           "background-color : rgb(255, 255, 255)\n"
-                                           "}\n"
-                                           "\n"
-                                           "")
+                                    "border: none ;\n"
+                                    "background: transparent ;\n"
+                                    "}\n"
+                                    "\n"
+                                    "QToolButton:pressed{\n"
+                                    "background-color : rgb(255, 255, 255)\n"
+                                    "}\n"
+                                    "\n"
+                                    "")
         icon = QtGui.QIcon()
         icon.addPixmap(QtGui.QPixmap(":icons/home.png"), QtGui.QIcon.Normal,
                        QtGui.QIcon.Off)
         self.btn_home.setIcon(icon)
         self.btn_home.setIconSize(QtCore.QSize(40, 40))
         self.btn_home.setObjectName("toolButton_home")
-
 
         self.widget = QtWidgets.QWidget(self.centralwidget)
         self.widget.setGeometry(QtCore.QRect(10, 100, 311, 163))
@@ -87,9 +77,9 @@ class SettingsMenu(QtWidgets.QWidget):
         self.lineEdit_2.setClearButtonEnabled(False)
         self.lineEdit_2.setObjectName("lineEdit_2")
         self.gridLayout.addWidget(self.lineEdit_2, 2, 1, 1, 1)
-        self.label = QtWidgets.QLabel("SSID",self.widget)
+        self.label = QtWidgets.QLabel("SSID", self.widget)
         self.gridLayout.addWidget(self.label, 2, 0, 1, 1)
-        self.label_2 = QtWidgets.QLabel("Passwort",self.widget)
+        self.label_2 = QtWidgets.QLabel("Passwort", self.widget)
         self.label_2.setObjectName("label_2")
         self.gridLayout.addWidget(self.label_2, 3, 0, 1, 1)
         self.lineEdit_3 = QtWidgets.QLineEdit(self.widget)
@@ -128,6 +118,17 @@ class SettingsMenu(QtWidgets.QWidget):
         self.btn_wifi__connect.setObjectName("btn_wifi__connect")
         self.gridLayout.addWidget(self.btn_wifi__connect, 4, 1, 1, 1, QtCore.Qt.AlignRight)
 
+    def connect_wifi(self):
+        ssid = self.lineEdit_2.text()
+        password = self.lineEdit_3.text()
 
-
-
+        if ssid is not None:
+            # Wrap into try except, because there is always an error thrown. Wifi should work nevertheless
+            print(1)
+            cell = Cell.where("wlan0", lambda w: w.ssid == f"{ssid}")[0]
+            print(2)
+            scheme = SchemeWPA('wlan0', cell.ssid, {"ssid": cell.ssid, "psk": f"{password}"})
+            print(3)
+            scheme.save()
+            print(4)
+            scheme.activate()

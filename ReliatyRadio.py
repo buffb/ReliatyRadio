@@ -1,10 +1,11 @@
+from PyQt5 import QtWidgets, QtCore
 from PyQt5.QtCore import pyqtSignal
-from PyQt5.QtWidgets import QStackedLayout
+from PyQt5.QtWidgets import QStackedLayout,QMainWindow,QWidget
 
-from Menus.MainMenu import *
+from View.Menus.MainMenu import *
 
 
-class ReliatyRadio(QtWidgets.QMainWindow):
+class ReliatyRadio(QMainWindow):
     layout = None
 
     back = pyqtSignal()
@@ -22,13 +23,11 @@ class ReliatyRadio(QtWidgets.QMainWindow):
         self.setSizePolicy(sizePolicy)
         self.setContextMenuPolicy(QtCore.Qt.NoContextMenu)
 
-
-
         self.show_main_menu()
 
     def init_layout(self):
         self.layout = QStackedLayout()
-        self.setCentralWidget(QtWidgets.QWidget())
+        self.setCentralWidget(QWidget())
         self.centralWidget().setSizePolicy(self.sizePolicy())
         self.centralWidget().resize(1024, 768)
         self.centralWidget().setLayout(self.layout)
@@ -46,17 +45,16 @@ class ReliatyRadio(QtWidgets.QMainWindow):
         self.clearLayout()
         self.add_and_show_widget(MainMenu())
 
-
     def clearLayout(self):
         while self.layout.count():
             child = self.layout.takeAt(0)
             if child.widget():
                 child.widget().deleteLater()
 
+
 if __name__ == "__main__":
     import sys
-
     app = QtWidgets.QApplication(sys.argv)
     MainWindow = ReliatyRadio()
-    MainWindow.showNormal()
+    MainWindow.show()
     sys.exit(app.exec_())

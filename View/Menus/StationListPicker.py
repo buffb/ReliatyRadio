@@ -1,16 +1,8 @@
-# -*- coding: utf-8 -*-
-
-# self.centralwidget implementation generated from reading ui file 'sendersuche.ui'
-#
-# Created by: PyQt5 UI code generator 5.13.1
-#
-# WARNING! All changes made in this file will be lost!
 from enum import Enum
 
 from PyQt5 import QtCore, QtGui, QtWidgets
 
-from DatabaseController import DatabaseController, db_session, desc, Webradio
-from ReliatyPlayer import ReliatyPlayer
+from Model.DatabaseController import DatabaseController, db_session, desc, Webradio
 from Util import QIconHelper
 
 
@@ -20,7 +12,7 @@ class Sorting(Enum):
 
 
 class StationListPicker(QtWidgets.QWidget):
-    def __init__(self):
+    def __init__(self,player=None):
         super().__init__()
         self.db = DatabaseController.get_instance()
         self.centralwidget = QtWidgets.QWidget(self)
@@ -28,7 +20,10 @@ class StationListPicker(QtWidgets.QWidget):
         self.centralwidget.setStyleSheet("background-color: rgb(255, 255, 255);")
         self.setup_ui()
 
-        self.player = ReliatyPlayer()
+        self.page= 1
+        self.perpage= 15
+
+        self.player = player
 
         self.sorting = None
         self.genre = None
@@ -52,12 +47,23 @@ class StationListPicker(QtWidgets.QWidget):
 
             self.box_sort.currentIndexChanged.connect(self.set_sorting)
 
-    # noinspection PyUnreachableCode
+            self.btn_next.clicked.connect(self.next_page)
+            self.btn_prev.clicked.connect(self.prev_page)
+
+
+    def next_page(self):
+        self.page+=1
+        self.populate_grid()
+
+    def prev_page(self):
+        self.page-=1
+        self.populate_grid()
+
     def populate_grid(self):
         with db_session:
             stations = self.db.get_radio_stations()
             if self.genre is not None:
-                stations = stations.filter(s for s in stations if self.genre in s.genres)
+                stations = stations.filter(lambda s: self.genre in s.genres)
 
             if self.sorting is None or self.sorting == Sorting.by_popularity:
                 stations = stations.order_by(desc(Webradio.popularity))
@@ -65,7 +71,7 @@ class StationListPicker(QtWidgets.QWidget):
             if self.sorting == Sorting.by_name:
                 stations = stations.order_by(desc(Webradio.name))
 
-            stationlist = list(stations)
+            stationlist = list(stations.page(self.page,self.perpage))
 
             for row in range(0, 3, 1):
                 for col in range(1, 6, 1):

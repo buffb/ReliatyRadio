@@ -1,16 +1,6 @@
-# -*- coding: utf-8 -*-
-
-# Form implementation generated from reading ui file 'home.ui'
-#
-# Created by: PyQt5 UI code generator 5.13.1
-#
-# WARNING! All changes made in this file will be lost!
-
-
 from PyQt5 import QtCore, QtGui, QtWidgets
 
-from Menus.SettingsMenu import SettingsMenu
-from Menus.StationListPicker import StationListPicker
+from View.Menus.SettingsMenu import SettingsMenu
 from Resources.resources_rc import *
 
 
@@ -88,7 +78,8 @@ class MainMenu(QtWidgets.QWidget):
         widget = SettingsMenu()
         self.nativeParentWidget().add_and_show_widget(widget)
         widget.btn_home.clicked.connect(self.nativeParentWidget().go_back)
+
     def show_webradio(self):
-        widget = StationListPicker()
+        widget = ReliatyPlayer()
         self.nativeParentWidget().add_and_show_widget(widget)
         #TODO Back Button
