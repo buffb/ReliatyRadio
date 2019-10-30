@@ -1,6 +1,7 @@
 from PyQt5 import QtCore, QtGui, QtWidgets
 
 from View.Menus.SettingsMenu import SettingsMenu
+from View.ReliatyPlayer import ReliatyPlayer
 from Resources.resources_rc import *
 
 

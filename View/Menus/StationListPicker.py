@@ -1,6 +1,7 @@
 from enum import Enum
 
 from PyQt5 import QtCore, QtGui, QtWidgets
+from PyQt5.QtGui import QColor
 
 from Model.DatabaseController import DatabaseController, db_session, desc, Webradio
 from Util import QIconHelper
@@ -31,25 +32,34 @@ class StationListPicker(QtWidgets.QWidget):
         self.populate_boxes()
         self.populate_grid()
 
+
+    def add_styled_item(self,target,text="",data=None,):
+        item = QtGui.QStandardItem(text)
+        item.setBackground(QColor(94, 136, 161, 200))
+        item.setData(data)
+        target.model().appendRow(item)
+
     def populate_boxes(self):
         with db_session:
             # Genres
-            self.box_genre.addItem("Alle Genres")
+            self.add_styled_item(self.box_genre,"Alle Genres")
             genres = self.db.get_genres_by_count()
             for genre in genres[0:10:1]:
-                self.box_genre.addItem(genre.name, genre)
+               self.add_styled_item(self.box_genre,genre.name,genre)
 
+            self.box_genre.disconnect()
             self.box_genre.currentIndexChanged.connect(self.filter_genre)
 
             # Sorting
-            self.box_sort.addItem("nach Beliebtheit", Sorting.by_popularity)
-            self.box_sort.addItem("nach Name", Sorting.by_name)
+            self.add_styled_item(self.box_sort,"nach Beliebtheit", Sorting.by_popularity)
+            self.add_styled_item(self.box_sort,"nach Name", Sorting.by_name)
 
+            self.box_sort.disconnect()
             self.box_sort.currentIndexChanged.connect(self.set_sorting)
 
             self.btn_next.clicked.connect(self.next_page)
             self.btn_prev.clicked.connect(self.prev_page)
-
+            self.lineEdit.editingFinished.connect(self.populate_grid)
 
     def next_page(self):
         self.page+=1
@@ -59,11 +69,23 @@ class StationListPicker(QtWidgets.QWidget):
         self.page-=1
         self.populate_grid()
 
+
     def populate_grid(self):
+        self.btn_prev.setEnabled(True)
+        self.btn_next.setEnabled(True)
+        search = False
+
+        if self.lineEdit.text() is not "":
+            search = True
+            self.box_genre.setCurrentIndex(0)
+            self.box_sort.setCurrentIndex(0)
         with db_session:
-            stations = self.db.get_radio_stations()
-            if self.genre is not None:
-                stations = stations.filter(lambda s: self.genre in s.genres)
+            if search:
+                stations = self.db.get_radio_stations_by_name(self.lineEdit.text())
+            else:
+                stations = self.db.get_radio_stations()
+                if self.genre is not None:
+                    stations = stations.filter(lambda s: self.genre in s.genres)
 
             if self.sorting is None or self.sorting == Sorting.by_popularity:
                 stations = stations.order_by(desc(Webradio.popularity))
@@ -80,29 +102,28 @@ class StationListPicker(QtWidgets.QWidget):
                     while not success:
                         if len(stationlist) > 0:
                             station = stationlist.pop(0)
-
                             iconable, icon = QIconHelper.qicon_from_binary_image(station.icon)
                             if not iconable: continue
                             widget.setIcon(icon)
                             station.load()
                             widget.setProperty("station", station)
+                            widget.setEnabled(True)
                             widget.clicked.connect(self.play_station)
                             success = True
                         else:
                             widget.setDisabled(True)
-                            widget.disconnect()
+                            self.btn_next.setEnabled(False)
                             break
-
+            if self.page == 1: self.btn_prev.setDisabled(True)
     def filter_genre(self):
-        self.genre = self.box_genre.currentData()
+        item = self.box_genre.model().item(self.box_genre.currentIndex())
+        self.genre = item.data()
         self.populate_grid()
 
     def set_sorting(self):
-        self.sorting = self.box_sort.currentData()
+        item = self.box_sort.model().item(self.box_sort.currentIndex())
+        self.sorting = item.data()
         self.populate_grid()
-
-    def search_by_name(self):
-        pass
 
     def play_station(self):
         station = self.sender().property("station")

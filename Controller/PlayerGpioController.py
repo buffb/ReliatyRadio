@@ -7,7 +7,7 @@ class PlayerGpioController():
 
     def __init__(self):
 
-        GPIO.setmode(GPIO.BCM)
+        GPIO.setmode(GPIO.BOARD)
         self.controller = GpioController()
         self.controller.switch_callback = None
         self.controller.rotary_callback = self.rotaryChange

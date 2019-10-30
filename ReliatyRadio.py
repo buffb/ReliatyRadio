@@ -1,3 +1,4 @@
+#!/usr/bin/env python3
 from PyQt5 import QtWidgets, QtCore
 from PyQt5.QtCore import pyqtSignal
 from PyQt5.QtWidgets import QStackedLayout,QMainWindow,QWidget
@@ -29,7 +30,7 @@ class ReliatyRadio(QMainWindow):
         self.layout = QStackedLayout()
         self.setCentralWidget(QWidget())
         self.centralWidget().setSizePolicy(self.sizePolicy())
-        self.centralWidget().resize(1024, 768)
+        self.centralWidget().resize(1024, 600)
         self.centralWidget().setLayout(self.layout)
 
     def add_and_show_widget(self, widget):
@@ -56,5 +57,5 @@ if __name__ == "__main__":
     import sys
     app = QtWidgets.QApplication(sys.argv)
     MainWindow = ReliatyRadio()
-    MainWindow.show()
+    MainWindow.showFullScreen()
     sys.exit(app.exec_())

@@ -1,6 +1,5 @@
 from datetime import datetime
-
-#import vlc
+import vlc
 from PyQt5 import QtCore, QtGui, QtWidgets
 
 from Model.DatabaseController import DatabaseController, db_session, Webradio
@@ -9,13 +8,16 @@ from View.Menus.StationListPicker import StationListPicker
 from Util import QIconHelper
 
 
+import os
+os.environ["QT_IM_MODULE"] = "qtvirtualkeyboard"
+
 class ReliatyPlayer(QtWidgets.QWidget):
     def __init__(self, parent=None):
         super().__init__()
 
         self.db = DatabaseController.get_instance()
-        #self.gpio = PlayerGpioController()
-        #self.gpio.controller.switch_callback = self.play_pause
+        self.gpio = PlayerGpioController()
+        self.gpio.controller.switch_callback = self.play_pause
 
         self.player = vlc.MediaPlayer()
 
@@ -65,7 +67,7 @@ class ReliatyPlayer(QtWidgets.QWidget):
         self.label_logo.setObjectName("label_logo")
 
         self.playercontrolbar = QtWidgets.QWidget(self.centralwidget)
-        self.playercontrolbar.setGeometry(QtCore.QRect(0, 600, 1021, 141))
+        self.playercontrolbar.setGeometry(QtCore.QRect(0, 400, 1021, 141))
         self.playercontrolbar.setObjectName("playercontrolbar")
         self.horizontalLayout = QtWidgets.QHBoxLayout(self.playercontrolbar)
         self.horizontalLayout.setContentsMargins(0, 0, 0, 0)
@@ -270,6 +272,7 @@ class ReliatyPlayer(QtWidgets.QWidget):
 
     def go_home(self):
         self.player.release()
+        self.gpio.stop()
         self.nativeParentWidget().show_main_menu()
 
     def play_pause(self):

@@ -124,11 +124,13 @@ class SettingsMenu(QtWidgets.QWidget):
 
         if ssid is not None:
             # Wrap into try except, because there is always an error thrown. Wifi should work nevertheless
-            print(1)
-            cell = Cell.where("wlan0", lambda w: w.ssid == f"{ssid}")[0]
-            print(2)
-            scheme = SchemeWPA('wlan0', cell.ssid, {"ssid": cell.ssid, "psk": f"{password}"})
-            print(3)
-            scheme.save()
-            print(4)
-            scheme.activate()
+            try:
+                cell = Cell.where("wlan0", lambda w: w.ssid == f"{ssid}")[0]
+
+                scheme = SchemeWPA('wlan0', cell.ssid, {"ssid": cell.ssid, "psk": f"{password}"})
+
+                scheme.save()
+
+                scheme.activate()
+            except:
+                pass

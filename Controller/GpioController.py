@@ -18,9 +18,11 @@ class GpioController:
     # 32 Power
 
     def __init__(self, 
-                 clock_pin= 23,
-                 data_pin = 3,
-                 switch_pin = 2,
+                 clock_pin= 16,
+                 data_pin = 5,
+                 switch_pin = 3,
+
+
                  sensing_pin=7,
                  thresh_pin=12,
                  impedance_pin=11,
@@ -63,9 +65,9 @@ class GpioController:
         self.onoff_callback = onoff_callback
 
         # setup pins
-        GPIO.setup(clock_pin, GPIO.IN, pull_up_down=GPIO.PUD_UP)
-        GPIO.setup(data_pin, GPIO.IN, pull_up_down=GPIO.PUD_UP)
-        GPIO.setup(switch_pin, GPIO.IN, pull_up_down=GPIO.PUD_UP)
+        GPIO.setup(self.clock_pin, GPIO.IN, pull_up_down=GPIO.PUD_UP)
+        GPIO.setup(self.data_pin, GPIO.IN, pull_up_down=GPIO.PUD_UP)
+        GPIO.setup(self.switch_pin, GPIO.IN, pull_up_down=GPIO.PUD_UP)
 
     def start(self):
         GPIO.add_event_detect(self.clock_pin, GPIO.FALLING, callback=self._clock_callback, bouncetime=self.DEBOUNCE)
