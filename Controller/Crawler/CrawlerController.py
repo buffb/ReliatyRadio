@@ -1,8 +1,9 @@
+import threading
 from io import BytesIO
-from multiprocessing import Manager
-from pathos.pools import ProcessPool as Pool
+from PIL import Image
 
 import requests
+from requests import Timeout
 
 from DatabaseController import DatabaseController, Webradio, db_session, Genre
 
@@ -30,9 +31,14 @@ class RadiodeCrawler(Crawler):
 
 
 class RadioBrowserCrawler(Crawler):
-    def __init__(self):
+    lock = threading.RLock()
+
+    def __init__(self, cc):
         super().__init__()
-        self.amount = None
+        self.cc = cc
+        self.amount = 0
+        self.current = 0
+
         self.address = 'http://www.radio-browser.info/webservice/json/stations/bycountryexact/Germany'
 
     @db_session
@@ -40,18 +46,12 @@ class RadioBrowserCrawler(Crawler):
         resp = requests.get(url=self.address)
         data = resp.json()
         self.amount = len(data)
-        m = Manager()
-        self.lock = m.RLock()
-        self.counter = m.Value(int, 0)
-        with Pool(1) as p:
-            p.map(self.process_station, data)
+        for station in data:
+            self.process_station(station)
 
     def process_station(self, station):
-
-        self.lock.acquire(True)
-        self.counter.set(self.counter.get() + 1)
-        print(str(self.counter.get()) + "/" + str(self.amount))
-        self.lock.release()
+        self.current += 1
+        print(str(self.current) + "/" + str(self.amount))
 
         name = station["name"]
         url = station["url"]
@@ -59,11 +59,9 @@ class RadioBrowserCrawler(Crawler):
         tags = station["tags"].split(",")
         genres = []
         for genre in tags:
-            if genre == "" or len(genre) > 100: continue
+            if genre is None or genre == "" or len(genre) > 100: continue
             if not Genre.get(name=genre):
-                self.lock.acquire(True)
                 genres.append(Genre(name=genre))
-                self.lock.release()
             else:
                 genres.append(Genre.get(name=genre))
 
@@ -71,21 +69,30 @@ class RadioBrowserCrawler(Crawler):
         icon = None
         if iconurl is not None:
             try:
-                icon = BytesIO(requests.get(iconurl, stream=True).raw)
+                response = requests.get(iconurl, timeout=(10, 10))
+                if not response:
+                    return
+                icon = BytesIO(response.content).getvalue()
+            except Timeout:
+                print("Timeout")
+                return
             except:
+                print("Error")
                 return
 
         popularity = int(station["votes"]) + int(station["clickcount"])
 
+        if Webradio.get(name=name) is not None:
+            return
+
         if icon and name and url and popularity:
-            self.lock.acquire(True)
-            Webradio(name=name, genres=genres, url=url, icon=icon, country="Deutschland")
-            self.lock.release()
+            Webradio(name=name, genres=genres, url=url, icon=icon, popularity=popularity)
+            self.cc.dbc.db.commit()
 
 
 if __name__ == '__main__':
     c = CrawlerController()
-    c.crawlers.append(RadioBrowserCrawler())
+    c.crawlers.append(RadioBrowserCrawler(c))
 
     for cr in c.crawlers:
         cr.crawl()

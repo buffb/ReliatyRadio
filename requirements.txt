@@ -1,5 +1,7 @@
 pathos
 pony
-PyQt5
+#PyQt5
 requests
 python-vlc
+wifi
+gitpython
