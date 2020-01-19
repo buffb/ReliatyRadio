@@ -14,7 +14,14 @@ class SettingsMenu(QtWidgets.QWidget):
 
         self.btn_wifi__connect.clicked.connect(lambda: self.controller.connect_wifi(self.ssid_input.text(),
                                                                                     self.wifi_pwd_input.text()))
-        self.btn_update.clicked.connect(self.controller.update_software)
+        self.btn_update.clicked.connect(self.check_for_update)
+
+
+    def check_for_update(self):
+        self.controller.update_software()
+        #Will not excecute if restarted after update was necessary
+        self.btn_update.setEnabled(False)
+        self.btn_update.setText("Kein Update verfügbar")
 
     def setup_ui(self):
         self.setEnabled(True)
@@ -92,14 +99,14 @@ class SettingsMenu(QtWidgets.QWidget):
         font.setPointSize(16)
         self.wifi_pwd_input.setFont(font)
         self.wifi_pwd_input.setStyleSheet("QLineEdit\n"
-                                      "{\n"
-                                      "    color:black;\n"
-                                      "    border-color: rgba(94, 136, 161, 200);\n"
-                                      "    border-width: 1px;\n"
-                                      "    border-style: solid;\n"
-                                      "}\n"
-                                      "@label->setStyleSheet(\"font: 18pt;\");\n"
-                                      "")
+                                          "{\n"
+                                          "    color:black;\n"
+                                          "    border-color: rgba(94, 136, 161, 200);\n"
+                                          "    border-width: 1px;\n"
+                                          "    border-style: solid;\n"
+                                          "}\n"
+                                          "@label->setStyleSheet(\"font: 18pt;\");\n"
+                                          "")
         self.wifi_pwd_input.setText("")
         self.wifi_pwd_input.setEchoMode(QtWidgets.QLineEdit.Password)
         self.wifi_pwd_input.setPlaceholderText("")

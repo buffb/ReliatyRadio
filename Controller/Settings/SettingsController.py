@@ -29,6 +29,8 @@ class SettingsController:
             if success:
                 self.restart()
 
+        return False
+
     def restart(self):
         import subprocess
         command = "/usr/bin/sudo /sbin/shutdown -r now"
