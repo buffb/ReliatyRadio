@@ -13,7 +13,7 @@ class Sorting(Enum):
 
 
 class StationListPicker(QtWidgets.QWidget):
-    def __init__(self,player=None):
+    def __init__(self, player=None):
         super().__init__()
         self.db = DatabaseController.get_instance()
         self.centralwidget = QtWidgets.QWidget(self)
@@ -21,8 +21,8 @@ class StationListPicker(QtWidgets.QWidget):
         self.centralwidget.setStyleSheet("background-color: rgb(255, 255, 255);")
         self.setup_ui()
 
-        self.page= 1
-        self.perpage= 15
+        self.page = 1
+        self.perpage = 15
 
         self.player = player
 
@@ -32,8 +32,7 @@ class StationListPicker(QtWidgets.QWidget):
         self.populate_boxes()
         self.populate_grid()
 
-
-    def add_styled_item(self,target,text="",data=None,):
+    def add_styled_item(self, target, text="", data=None, ):
         item = QtGui.QStandardItem(text)
         item.setBackground(QColor(94, 136, 161, 200))
         item.setData(data)
@@ -42,17 +41,17 @@ class StationListPicker(QtWidgets.QWidget):
     def populate_boxes(self):
         with db_session:
             # Genres
-            self.add_styled_item(self.box_genre,"Alle Genres")
+            self.add_styled_item(self.box_genre, "Alle Genres")
             genres = self.db.get_genres_by_count()
             for genre in genres[0:10:1]:
-               self.add_styled_item(self.box_genre,genre.name,genre)
+                self.add_styled_item(self.box_genre, genre.name, genre)
 
             self.box_genre.disconnect()
             self.box_genre.currentIndexChanged.connect(self.filter_genre)
 
             # Sorting
-            self.add_styled_item(self.box_sort,"nach Beliebtheit", Sorting.by_popularity)
-            self.add_styled_item(self.box_sort,"nach Name", Sorting.by_name)
+            self.add_styled_item(self.box_sort, "nach Beliebtheit", Sorting.by_popularity)
+            self.add_styled_item(self.box_sort, "nach Name", Sorting.by_name)
 
             self.box_sort.disconnect()
             self.box_sort.currentIndexChanged.connect(self.set_sorting)
@@ -62,13 +61,12 @@ class StationListPicker(QtWidgets.QWidget):
             self.lineEdit.editingFinished.connect(self.populate_grid)
 
     def next_page(self):
-        self.page+=1
+        self.page += 1
         self.populate_grid()
 
     def prev_page(self):
-        self.page-=1
+        self.page -= 1
         self.populate_grid()
-
 
     def populate_grid(self):
         self.btn_prev.setEnabled(True)
@@ -93,7 +91,7 @@ class StationListPicker(QtWidgets.QWidget):
             if self.sorting == Sorting.by_name:
                 stations = stations.order_by(desc(Webradio.name))
 
-            stationlist = list(stations.page(self.page,self.perpage))
+            stationlist = list(stations.page(self.page, self.perpage))
 
             for row in range(0, 3, 1):
                 for col in range(1, 6, 1):
@@ -115,6 +113,7 @@ class StationListPicker(QtWidgets.QWidget):
                             self.btn_next.setEnabled(False)
                             break
             if self.page == 1: self.btn_prev.setDisabled(True)
+
     def filter_genre(self):
         item = self.box_genre.model().item(self.box_genre.currentIndex())
         self.genre = item.data()
