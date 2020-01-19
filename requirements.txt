@@ -1,7 +1,7 @@
 pathos
 pony
 #Windows C++ Build Tools are needed for Qt to install
-PyQt5
+#PyQt5
 #######
 requests
 python-vlc
