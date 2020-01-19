@@ -13,12 +13,12 @@ class ReliatyUpdater:
         try:
             self.repo = git.Repo(search_parent_directories=True)
         except:
-            os.chdir("../../")
             tmp = os.getcwd()
             os.chdir("../")
             shutil.rmtree(tmp)
-            git.Git().clone("https://github.com/buffb/ReliatyRadio.git")
-            self.repo = git.Repo(search_parent_directories=True)
+            self.repo = git.Git().clone("https://github.com/buffb/ReliatyRadio.git")
+            self.restart()
+
 
         local_version = self.repo.head.object.hexsha
         self.repo.remote().fetch()
