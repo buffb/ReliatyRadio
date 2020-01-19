@@ -92,7 +92,7 @@ background-color : rgb(255, 255, 255)
     <string>...</string>
    </property>
    <property name="icon">
-    <iconset resource="../../Resources/resources.qrc">
+    <iconset>
      <normaloff>:/icons/home.png</normaloff>:/icons/home.png</iconset>
    </property>
    <property name="iconSize">
@@ -102,7 +102,7 @@ background-color : rgb(255, 255, 255)
     </size>
    </property>
   </widget>
-  <widget class="QWidget" name="" native="true">
+  <widget class="QWidget" name="widget" native="true">
    <property name="geometry">
     <rect>
      <x>10</x>
@@ -221,7 +221,7 @@ background-color : rgb(255, 255, 255)
        <string>...</string>
       </property>
       <property name="icon">
-       <iconset resource="../../Resources/resources.qrc">
+       <iconset>
         <normaloff>:/icons/play.png</normaloff>:/icons/play.png</iconset>
       </property>
       <property name="iconSize">
@@ -233,6 +233,33 @@ background-color : rgb(255, 255, 255)
      </widget>
     </item>
    </layout>
+  </widget>
+  <widget class="QPushButton" name="pushButton">
+   <property name="geometry">
+    <rect>
+     <x>780</x>
+     <y>10</y>
+     <width>231</width>
+     <height>41</height>
+    </rect>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">QPushButton
+{
+    color:black;
+    border-color: rgba(94, 136, 161, 200);
+    border-width: 1px;
+    border-style: solid;
+}
+QPushButton:hover
+{
+   background-color:rgba(94, 136, 161, 200);
+}
+</string>
+   </property>
+   <property name="text">
+    <string>Check for Update</string>
+   </property>
   </widget>
  </widget>
  <resources>

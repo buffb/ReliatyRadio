@@ -118,6 +118,23 @@ class SettingsMenu(QtWidgets.QWidget):
         self.btn_wifi__connect.setObjectName("btn_wifi__connect")
         self.gridLayout.addWidget(self.btn_wifi__connect, 4, 1, 1, 1, QtCore.Qt.AlignRight)
 
+        self.btn_update = QtWidgets.QPushButton(self.widget)
+        self.btn_update.setGeometry(QtCore.QRect(780, 10, 231, 41))
+        self.btn_update.setStyleSheet("QPushButton\n"
+                                      "{\n"
+                                      "    color:black;\n"
+                                      "    border-color: rgba(94, 136, 161, 200);\n"
+                                      "    border-width: 1px;\n"
+                                      "    border-style: solid;\n"
+                                      "}\n"
+                                      "QPushButton:hover\n"
+                                      "{\n"
+                                      "   background-color:rgba(94, 136, 161, 200);\n"
+                                      "}\n"
+                                      "")
+        self.btn_update.setObjectName("btn_update")
+        self.btn_update.setText("Updates installieren")
+
     def connect_wifi(self):
         ssid = self.lineEdit_2.text()
         password = self.lineEdit_3.text()
