@@ -7,9 +7,10 @@ from Controller.PlayerGpioController import PlayerGpioController
 from View.Menus.StationListPicker import StationListPicker
 from Util import QIconHelper
 
-
 import os
+
 os.environ["QT_IM_MODULE"] = "qtvirtualkeyboard"
+
 
 class ReliatyPlayer(QtWidgets.QWidget):
     def __init__(self, parent=None):
@@ -27,13 +28,12 @@ class ReliatyPlayer(QtWidgets.QWidget):
 
         self.setup_ui()
 
-        #Start with last played station
+        # Start with last played station
         with db_session:
-            station= self.db.get_stations_by_last_played().first()
+            station = self.db.get_stations_by_last_played().first()
             self.change_station(station)
         self.setup_buttons()
         self.populate_wigets()
-
 
     def setup_ui(self):
         self.centralwidget.setStyleSheet("background-color: rgb(255, 255, 255);")
@@ -245,13 +245,13 @@ class ReliatyPlayer(QtWidgets.QWidget):
                         break
                     station = stations.pop(0)
                     if self.station is not None and station.name == self.station.name: continue
-                    iconable, icon = QIconHelper.qicon_from_binary_image(station.icon,greyscale=True)
+                    iconable, icon = QIconHelper.qicon_from_binary_image(station.icon, greyscale=True)
                     if not iconable: continue
 
                     widget.setIcon(icon)
                     station.load()
                     widget.setProperty("station", station)
-                    widget.disconnect() # prohibit multiple connections
+                    widget.disconnect()  # prohibit multiple connections
                     widget.clicked.connect(self.on_change_station)
                     unpopulated = False
 
@@ -268,7 +268,6 @@ class ReliatyPlayer(QtWidgets.QWidget):
 
     def open_station_picker(self):
         self.nativeParentWidget().add_and_show_widget(StationListPicker(player=self))
-
 
     def go_home(self):
         self.player.release()
@@ -303,4 +302,3 @@ class ReliatyPlayer(QtWidgets.QWidget):
         self.station_1.setProperty("station", station)
         self.populate_wigets()
         self.setup_player()
-

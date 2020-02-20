@@ -3,8 +3,8 @@ import sys
 
 from wifi import Cell
 
-from Settings.SchemeWPA import SchemeWPA
-from Update.ReliatyUpdater import ReliatyUpdater
+from Controller.Settings.SchemeWPA import SchemeWPA
+from Controller.Update.ReliatyUpdater import ReliatyUpdater
 
 
 class SettingsController:

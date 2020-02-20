@@ -1,8 +1,6 @@
 from PyQt5 import QtCore, QtGui, QtWidgets
-from wifi import Cell
 
-from Controller.Settings.SchemeWPA import SchemeWPA
-from Settings.SettingsController import SettingsController
+from Controller.Settings.SettingsController import SettingsController
 
 
 class SettingsMenu(QtWidgets.QWidget):

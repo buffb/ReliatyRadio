@@ -3,7 +3,7 @@ from PyQt5 import QtWidgets, QtCore
 from PyQt5.QtCore import pyqtSignal
 from PyQt5.QtWidgets import QStackedLayout,QMainWindow,QWidget
 
-from View.Menus.MainMenu import *
+from View.Menus.MainMenu import MainMenu
 
 
 class ReliatyRadio(QMainWindow):

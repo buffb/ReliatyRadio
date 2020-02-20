@@ -70,8 +70,8 @@ class GpioController:
         GPIO.setup(self.switch_pin, GPIO.IN, pull_up_down=GPIO.PUD_UP)
 
     def start(self):
-        GPIO.add_event_detect(self.clock_pin, GPIO.FALLING, callback=self._clock_callback, bouncetime=self.DEBOUNCE)
-        GPIO.add_event_detect(self.switch_pin, GPIO.FALLING, callback=self._switch_callback, bouncetime=self.DEBOUNCE_SWITCH)
+        GPIO.add_event_detect(self.clock_pin, GPIO.PUD_UP, callback=self._clock_callback, bouncetime=self.DEBOUNCE)
+        GPIO.add_event_detect(self.switch_pin, GPIO.PUD_UP, callback=self._switch_callback, bouncetime=self.DEBOUNCE_SWITCH)
 
     def stop(self):
         GPIO.remove_event_detect(self.clock_pin)
