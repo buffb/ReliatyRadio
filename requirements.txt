@@ -6,3 +6,4 @@ pony
 requests
 python-vlc
 wifi
+GitPython
