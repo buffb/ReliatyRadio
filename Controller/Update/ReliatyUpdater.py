@@ -13,11 +13,13 @@ class ReliatyUpdater:
         try:
             self.repo = git.Repo(search_parent_directories=True)
         except:
+            # Creating a clean setup by wiping program folder
             tmp = os.getcwd()
             os.chdir("../")
             shutil.rmtree(tmp)
+            # Get current version from Github
             self.repo = git.Git().clone("https://github.com/buffb/ReliatyRadio.git")
-            os.chdir(tmp)
+            os.chdir(tmp) # Change back cwd to fit with recursion
             self.check_for_update()
             return
 
