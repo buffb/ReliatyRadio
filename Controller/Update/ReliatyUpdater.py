@@ -17,7 +17,9 @@ class ReliatyUpdater:
             os.chdir("../")
             shutil.rmtree(tmp)
             self.repo = git.Git().clone("https://github.com/buffb/ReliatyRadio.git")
-            self.restart()
+            os.chdir(tmp)
+            self.check_for_update()
+            return
 
 
         local_version = self.repo.head.object.hexsha
