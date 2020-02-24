@@ -30,7 +30,7 @@ class ReliatyRadio(QMainWindow):
         self.layout = QStackedLayout()
         self.setCentralWidget(QWidget())
         self.centralWidget().setSizePolicy(self.sizePolicy())
-        self.centralWidget().resize(1024, 600)
+        self.centralWidget().resize(1024, 768)
         self.centralWidget().setLayout(self.layout)
 
     def add_and_show_widget(self, widget):
