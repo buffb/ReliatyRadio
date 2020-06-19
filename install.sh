@@ -21,14 +21,6 @@ sudo sed -i -e '$i startx &' /etc/rc.local # Run startx in rc.local
 sudo sed -i -e '/.\/etc/ s/^#*/#/' /etc/X11/xinit/xinitrc # Comment out unnecessary lines
 sudo sed -i -e '$ a exec openbox-session' /etc/X11/xinit/xinitrc
 
-#Auto-Login without raspi-config
-USER=${SUDO_USER:-$(who -m | awk '{ print $1 }')}
-sudo systemctl set-default multi-user.target
-sudo ln -fs /lib/systemd/system/getty@.service /etc/systemd/system/getty.target.wants/getty@tty1.service
-sudo cat > /etc/systemd/system/getty@tty1.service.d/autologin.conf << EOF
-[Service]
-ExecStart=
-ExecStart=-/sbin/agetty --autologin $USER --noclear %I \$TERM
-EOF
+
 
 exit 0
