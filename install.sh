@@ -18,18 +18,17 @@ sudo sed -i '$ a xset s off\nxset s noblank\nxset -dpms' /etc/xdg/openbox/autost
 sudo sed -i '$ a sudo python3 /opt/ReliatyRadio/ReliatyRadio.py &' /etc/xdg/openbox/autostart # Radio autostart
 sudo sed -i -e '$i startx &' /etc/rc.local # Run startx in rc.local
 # Configure xinitrc
-
-
-#Auto-Login without raspi-config
 sudo sed -i -e '/.\/etc/ s/^#*/#/' /etc/X11/xinit/xinitrc # Comment out unnecessary lines
 sudo sed -i -e '$ a exec openbox-session' /etc/X11/xinit/xinitrc
 
-if [ $SYSTEMD -eq 1 ]; then
-  systemctl set-default multi-user.target
-  ln -fs /etc/systemd/system/autologin@.service /etc/systemd/system/getty.target.wants/getty@tty1.service
-else
-  [ -e /etc/init.d/lightdm ] && update-rc.d lightdm disable 2
-  sed /etc/inittab -i -e "s/1:2345:respawn:\/sbin\/getty --noclear 38400 tty1/1:2345:respawn:\/bin\/login -f pi tty1 <\/d$"
-fi
+#Auto-Login without raspi-config
+USER=${SUDO_USER:-$(who -m | awk '{ print $1 }')}
+sudo systemctl set-default multi-user.target
+sudo ln -fs /lib/systemd/system/getty@.service /etc/systemd/system/getty.target.wants/getty@tty1.service
+sudo cat > /etc/systemd/system/getty@tty1.service.d/autologin.conf << EOF
+[Service]
+ExecStart=
+ExecStart=-/sbin/agetty --autologin $USER --noclear %I \$TERM
+EOF
 
 exit 0
