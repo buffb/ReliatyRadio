@@ -20,6 +20,7 @@ class SettingsController:
                 scheme.save()
                 scheme.activate()
             except:
+                e = sys.exc_info()[0]
                 pass
 
     def update_software(self):
@@ -32,6 +33,6 @@ class SettingsController:
         return False
 
     def restart(self):
-        import subprocess
+        import subprocessyy
         command = "/usr/bin/sudo /sbin/shutdown -r now"
         process = subprocess.Popen(command.split(), stdout=subprocess.PIPE)
