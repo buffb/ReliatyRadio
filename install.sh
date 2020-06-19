@@ -16,7 +16,7 @@ sudo -H pip3 install -r requirements.txt
 echo 'Configuring the ReliatyRadio'
 sudo sed -i '$ a xset s off\nxset s noblank\nxset -dpms' /etc/xdg/openbox/autostart #disable display timeout aka screensaver
 sudo sed -i '$ a sudo python3 /opt/ReliatyRadio/ReliatyRadio.py &' /etc/xdg/openbox/autostart # Radio autostart
-sed -e '$i startx &' /etc/rc.local # Run startx in rc.local
+sudo sed -i -e '$i startx &' /etc/rc.local # Run startx in rc.local
 # Configure xinitrc
 
 
