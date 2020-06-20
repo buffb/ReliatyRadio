@@ -29,11 +29,7 @@ class ReliatyUpdater:
         remote_version = self.repo.remotes.origin.refs["master"].commit.hexsha
 
         if remote_version != local_version:
-            self.repo.git.reset('--hard')
-            self.repo.heads.master.checkout()
-            self.repo.git.clean("-xdf")
-            self.repo.remotes.origin.pull()
-            self.restart()
+            self.do_update()
 
         return False
 

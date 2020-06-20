@@ -5,7 +5,7 @@
 sudo apt-get update &&
 sudo apt-get upgrade -y &&
 sudo apt-get install --no-install-recommends xserver-xorg x11-xserver-utils xinit openbox \
-python3-pip python-setuptools python-wheel python3-pyqt5 python3-rpi.gpio git vlc omxplayer -y
+python3-pip python3-setuptools python3-wheel python3-pyqt5 python3-rpi.gpio git vlc omxplayer -y
 cd /opt/ || exit 1
 sudo git clone https://github.com/buffb/ReliatyRadio.git
 cd ReliatyRadio/ || exit 1
@@ -30,7 +30,7 @@ END
 
 #Rotate display and touch input
 sudo sed -i '/touchscreen catchall.*/a \\tOption "TransformationMatrix" "-1 0 1 0 -1 1 0 0 1"' /usr/share/X11/xorg.conf.d/40-libinput.conf
-sudo sed -i -e '$ a hdmi_cvt 1024 600 60' /boot/config.txt
+#sudo sed -i -e '$ a hdmi_cvt 1024 600 60' /boot/config.txt Changing Resolution still does not work. NOTE: Check raspi-config code
 sudo sed -i -e '$ a display_rotate=2' /boot/config.txt
 
 #German Keyboard
