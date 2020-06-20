@@ -20,7 +20,8 @@ class ReliatyPlayer(QtWidgets.QWidget):
         self.gpio = PlayerGpioController()
         self.gpio.controller.switch_callback = self.play_pause
 
-        self.player = vlc.MediaPlayer()
+        self.v = vlc.Instance("--aout=alsa")
+        self.player = self.v.media_player_new()
 
         self.centralwidget = QtWidgets.QWidget(self)
         self.centralwidget.setGeometry(QtCore.QRect(0, 0, 1024, 768))

@@ -21,6 +21,20 @@ sudo sed -i -e '$i startx &' /etc/rc.local # Run startx in rc.local
 sudo sed -i -e '/.\/etc/ s/^#*/#/' /etc/X11/xinit/xinitrc # Comment out unnecessary lines
 sudo sed -i -e '$ a exec openbox-session' /etc/X11/xinit/xinitrc
 
+#Set Audio Jack to default sound card
+sudo tee -a /etc/asound.conf << END
+defaults.pcm.card 1
+defaults.ctl.card 1
+END
 
+#Rotate display and touch input
+sudo sed -i '/touchscreen catchall.*/a \\tOption "TransformationMatrix" "-1 0 1 0 -1 1 0 0 1"' /usr/share/X11/xorg.conf.d/40-libinput.conf
+sudo sed -i -e '$ a hdmi_cvt 1024 600 60' /boot/config.txt
+sudo sed -i -e '$ a display_rotate=2' /boot/config.txt
 
+#German Keyboard
+sudo sed -i  "s/XKBLAYOUT=../XKBLAYOUT=de/g" /etc/default/keyboard
+
+#Disable ipv6
+sudo sed -i -e '$ a net.ipv6.conf.all.disable_ipv6 = 1' /etc/sysctl.conf
 exit 0

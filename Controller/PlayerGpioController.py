@@ -15,7 +15,7 @@ class PlayerGpioController():
         self.controller.start()
 
     def readVolume(self):
-        value = os.popen("sudo amixer get PCM|grep -o [0-9]*%|sed 's/%//'").read()
+        value = os.popen("sudo amixer get Headphone|grep -o [0-9]*%|sed 's/%//'").read()
         return int(value)
 
     def rotaryChange(self, direction):
@@ -26,10 +26,10 @@ class PlayerGpioController():
         volume = self.readVolume()
 
         if direction == 1:
-            os.system("sudo amixer set PCM -- " + str(min(100, max(0, volume + volume_step))) + "%")
+            os.system("sudo amixer set Headphone -- " + str(min(100, max(0, volume + volume_step))) + "%")
             print("vol-up")
         else:
-            os.system("sudo amixer set PCM -- " + str(min(100, max(0, volume - volume_step))) + "%")
+            os.system("sudo amixer set Headphone -- " + str(min(100, max(0, volume - volume_step))) + "%")
             print("vol-down")
 
     def start(self):
