@@ -51,9 +51,9 @@ class SchemeWPA(Scheme):
         Connects to the network as configured in this scheme.
         """
         subprocess.check_output(["sudo", "/sbin/ifconfig", self.interface, "down"], stderr=subprocess.STDOUT)
-        time.sleep(2)
-        ifup_output = subprocess.check_output(["sudo", "/sbin/ifconfig", self.interface, "up"], stderr=subprocess.STDOUT)
-        ifup_output = ifup_output.decode('utf-8')
+        subprocess.check_output(["sudo", "/sbin/ifconfig", self.interface, "up"], stderr=subprocess.STDOUT)
+        subprocess.check_output(["sudo", "/sbin/wpa_cli", "-i", self.interface, "reconfigure"], stderr=subprocess.STDOUT)
+        time.sleep(10)
 
     def delete(self):
         """

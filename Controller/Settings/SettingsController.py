@@ -1,27 +1,30 @@
 import os
 import sys
 
-from PyQt5.QtCore import QObject, pyqtSignal
+from PyQt5 import QtCore
 from wifi import Cell, Scheme
 
 from Controller.Settings.SchemeWPA import SchemeWPA
 from Controller.Update.ReliatyUpdater import ReliatyUpdater
 
 
-class SettingsController(QObject):
+class SettingsController(QtCore.QObject):
+    status_updated = QtCore.pyqtSignal(str)
+    ip_updated = QtCore.pyqtSignal(str)
+
     def __init__(self, menu):
         super().__init__()
-        status_updated = pyqtSignal(str)
-        intReady = pyqtSignal(int)
         self.menu = menu
 
+
+    @QtCore.pyqtSlot(str,str)
     def connect_wifi(self, ssid, password):
         if ssid is not None:
             try:
                 self.status_updated.emit("Verbinde..")
                 cell = Cell.where("wlan0", lambda w: w.ssid == f"{ssid}")[0]
                 if cell.encrypted is True and not password:
-                    self.menu.label_status2.setText("Passwort inkorrekt")
+                    self.status_updated.emit("Passwort inkorrekt")
                     return
                 scheme= SchemeWPA('wlan0',ssid,{"ssid":ssid,"psk":password})
                 if scheme.iface in [iface.iface for iface in SchemeWPA.all()]:
@@ -29,13 +32,13 @@ class SettingsController(QObject):
                 scheme.save()
 
                 scheme.activate()
-
-                self.menu.populate_labels()
-
+                self.status_updated.emit(self.get_status())
+                self.ip_updated.emit(self.get_ip())
 
             except IndexError:
-                self.menu.label_status2.setText("Netzwerk nicht gefunden")
+                self.status_updated.emit("Netzwerk nicht gefunden")
             except:
+                self.status_updated.emit("Fehler bei der Verbindungsaufnahme")
                 e = sys.exc_info()[0]
                 pass
 
@@ -56,10 +59,13 @@ class SettingsController(QObject):
 
     def get_status(self):
         status = "Nicht verbunden"
-        if os.popen('ip addr show wlan0').read().__contains__("state UP"):
+        if os.popen('ip addr show wlan0').read().__contains__("state UP") and self.get_ip():
             status = "Verbunden (" + os.popen('iwgetid').read().split('"')[1]+ ")"
         return status
 
     def get_ip(self):
-        ip = os.popen('ip addr show wlan0').read().split("inet ")[1].split("/")[0]
+        try:
+            ip = os.popen('ip addr show wlan0').read().split("inet ")[1].split("/")[0]
+        except IndexError:
+            return ""
         return ip
