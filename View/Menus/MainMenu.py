@@ -78,7 +78,7 @@ class MainMenu(QtWidgets.QWidget):
     def show_settings(self):
         widget = SettingsMenu()
         self.nativeParentWidget().add_and_show_widget(widget)
-        widget.btn_home.clicked.connect(self.nativeParentWidget().go_back)
+
 
     def show_webradio(self):
         widget = ReliatyPlayer()

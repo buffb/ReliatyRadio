@@ -7,7 +7,7 @@ from Controller.Settings.SettingsController import SettingsController
 class SettingsMenu(QtWidgets.QWidget):
 
     def __init__(self, parent=None):
-        super().__init__(parent)
+        super().__init__()
         self.setup_ui()
         self.thread = QThread()
         self.controller = SettingsController(self)
