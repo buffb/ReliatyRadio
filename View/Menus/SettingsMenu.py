@@ -8,12 +8,18 @@ class SettingsMenu(QtWidgets.QWidget):
     def __init__(self, parent=None):
         super().__init__(parent)
         self.setup_ui()
-        self.controller = SettingsController()
+        self.controller = SettingsController(self)
 
-        self.btn_wifi__connect.clicked.connect(lambda: self.controller.connect_wifi(self.ssid_input.text(),
-                                                                                    self.wifi_pwd_input.text()))
+        self.populate_labels()
+
+        self.btn_wifi__connect.clicked.connect(self.connect_to_wifi)
         self.btn_update.clicked.connect(self.check_for_update)
 
+
+
+    def connect_to_wifi(self):
+        self.controller.connect_wifi(self.ssid_input.text(),
+                                     self.wifi_pwd_input.text())
 
     def check_for_update(self):
         self.controller.update_software()
@@ -21,8 +27,16 @@ class SettingsMenu(QtWidgets.QWidget):
         self.btn_update.setEnabled(False)
         self.btn_update.setText("Kein Update verfügbar")
 
+    def populate_labels(self):
+        self.label_status2.setText(self.controller.get_status())
+        self.label_ip2.setText(self.controller.get_ip())
+
+
     def setup_ui(self):
         self.setEnabled(True)
+
+        font = QtGui.QFont()
+        font.setPointSize(12)
 
         icon = QtGui.QIcon()
         icon.addPixmap(QtGui.QPixmap(":/icons/radio.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
@@ -56,21 +70,49 @@ class SettingsMenu(QtWidgets.QWidget):
         self.btn_home.setIconSize(QtCore.QSize(40, 40))
         self.btn_home.setObjectName("toolButton_home")
 
-        self.widget = QtWidgets.QWidget(self.centralwidget)
-        self.widget.setGeometry(QtCore.QRect(10, 100, 311, 163))
-        self.widget.setObjectName("widget")
-        self.gridLayout = QtWidgets.QGridLayout(self.widget)
-        self.gridLayout.setContentsMargins(0, 0, 0, 0)
-        self.gridLayout.setObjectName("gridLayout")
-        self.label_logo_2 = QtWidgets.QLabel(self.widget)
-        self.label_logo_2.setStyleSheet("image: url(:/icons/wlan.png);")
-        self.label_logo_2.setText("")
-        self.label_logo_2.setWordWrap(False)
-        self.label_logo_2.setObjectName("label_logo_2")
-        self.gridLayout.addWidget(self.label_logo_2, 1, 1, 1, 1)
-        self.ssid_input = QtWidgets.QLineEdit(self.widget)
-        font = QtGui.QFont()
-        font.setPointSize(16)
+
+        ###WIFI Section
+
+        self.wifisection = QtWidgets.QWidget(self.centralwidget)
+        self.wifisection.setGeometry(QtCore.QRect(10, 100, 300, 200))
+        self.wifisection.setObjectName("wifisection")
+        self.wifiLayout = QtWidgets.QGridLayout(self.wifisection)
+        self.wifiLayout.setContentsMargins(0, 0, 0, 0)
+        self.wifiLayout.setObjectName("wifiLayout")
+
+
+        self.wifi_icon_label = QtWidgets.QLabel(self.wifisection)
+        self.wifi_icon_label.setWordWrap(False)
+        self.wifi_icon_label.setObjectName("wifi_icon_label")
+        pixmap = QtGui.QPixmap(":/icons/wlan.png")
+        self.wifi_icon_label.resize(40,40)
+        self.wifi_icon_label.setPixmap(pixmap.scaled(self.wifi_icon_label.size(), QtCore.Qt.KeepAspectRatio))
+        self.wifiLayout.addWidget(self.wifi_icon_label, 0, 0, 1, 2, QtCore.Qt.AlignHCenter)
+
+
+
+
+        #Connection State Labels
+
+        self.label_status1 = QtWidgets.QLabel("Status:", self.wifisection)
+        self.label_status2 = QtWidgets.QLabel("", self.wifisection)
+        self.label_ip1 = QtWidgets.QLabel("IP Adresse:", self.wifisection)
+        self.label_ip2 = QtWidgets.QLabel("", self.wifisection)
+        self.label_status1.setObjectName("label_status1")
+        self.label_status2.setObjectName("label_status2")
+        self.label_ip1.setObjectName("label_ip1")
+        self.label_ip2.setObjectName("label_ip2")
+        self.label_status1.setFont(font)
+        self.label_status2.setFont(font)
+        self.label_ip1.setFont(font)
+        self.label_ip2.setFont(font)
+        self.wifiLayout.addWidget(self.label_status1, 1, 0, 1, 1)
+        self.wifiLayout.addWidget(self.label_status2, 1, 1, 1, 1)
+        self.wifiLayout.addWidget(self.label_ip1, 2, 0, 1, 1)
+        self.wifiLayout.addWidget(self.label_ip2, 2, 1, 1, 1)
+
+        #SSID Input
+        self.ssid_input = QtWidgets.QLineEdit(self.wifisection)
         self.ssid_input.setFont(font)
         self.ssid_input.setStyleSheet("QLineEdit\n"
                                       "{\n"
@@ -86,15 +128,13 @@ class SettingsMenu(QtWidgets.QWidget):
         self.ssid_input.setEchoMode(QtWidgets.QLineEdit.Normal)
         self.ssid_input.setClearButtonEnabled(False)
         self.ssid_input.setObjectName("lineEdit_2")
-        self.gridLayout.addWidget(self.ssid_input, 2, 1, 1, 1)
-        self.label = QtWidgets.QLabel("SSID", self.widget)
-        self.gridLayout.addWidget(self.label, 2, 0, 1, 1)
-        self.label_2 = QtWidgets.QLabel("Passwort", self.widget)
-        self.label_2.setObjectName("label_2")
-        self.gridLayout.addWidget(self.label_2, 3, 0, 1, 1)
-        self.wifi_pwd_input = QtWidgets.QLineEdit(self.widget)
-        font = QtGui.QFont()
-        font.setPointSize(16)
+        self.wifiLayout.addWidget(self.ssid_input, 3, 1, 1, 1)
+        self.ssid_label = QtWidgets.QLabel("SSID", self.wifisection)
+        self.ssid_label.setFont(font)
+        self.wifiLayout.addWidget(self.ssid_label, 3, 0, 1, 1)
+
+        #Password Input
+        self.wifi_pwd_input = QtWidgets.QLineEdit(self.wifisection)
         self.wifi_pwd_input.setFont(font)
         self.wifi_pwd_input.setStyleSheet("QLineEdit\n"
                                           "{\n"
@@ -109,8 +149,14 @@ class SettingsMenu(QtWidgets.QWidget):
         self.wifi_pwd_input.setEchoMode(QtWidgets.QLineEdit.Password)
         self.wifi_pwd_input.setPlaceholderText("")
         self.wifi_pwd_input.setObjectName("lineEdit_3")
-        self.gridLayout.addWidget(self.wifi_pwd_input, 3, 1, 1, 1)
-        self.btn_wifi__connect = QtWidgets.QToolButton(self.widget)
+        self.wifiLayout.addWidget(self.wifi_pwd_input, 4, 1, 1, 1)
+
+        self.password_label = QtWidgets.QLabel("Passwort", self.wifisection)
+        self.password_label.setObjectName("label_2")
+        self.password_label.setFont(font)
+        self.wifiLayout.addWidget(self.password_label, 4, 0, 1, 1)
+
+        self.btn_wifi__connect = QtWidgets.QToolButton(self.wifisection)
         self.btn_wifi__connect.setStyleSheet("QToolButton{\n"
                                              "border: none ;\n"
                                              "background: transparent ;\n"
@@ -126,7 +172,7 @@ class SettingsMenu(QtWidgets.QWidget):
         self.btn_wifi__connect.setIcon(icon2)
         self.btn_wifi__connect.setIconSize(QtCore.QSize(40, 40))
         self.btn_wifi__connect.setObjectName("btn_wifi__connect")
-        self.gridLayout.addWidget(self.btn_wifi__connect, 4, 1, 1, 1, QtCore.Qt.AlignRight)
+        self.wifiLayout.addWidget(self.btn_wifi__connect, 6, 0, 1, 2, QtCore.Qt.AlignRight)
 
         self.btn_update = QtWidgets.QPushButton(self.centralwidget)
         self.btn_update.setGeometry(QtCore.QRect(780, 10, 231, 41))
@@ -144,3 +190,4 @@ class SettingsMenu(QtWidgets.QWidget):
                                       "")
         self.btn_update.setObjectName("btn_update")
         self.btn_update.setText("Updates installieren")
+        self.btn_update.setFont(font)

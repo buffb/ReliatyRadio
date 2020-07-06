@@ -34,7 +34,7 @@ sudo sed -i '/touchscreen catchall.*/a \\tOption "TransformationMatrix" "-1 0 1 
 sudo sed -i -e '$ a display_rotate=2' /boot/config.txt
 
 #German Keyboard
-sudo sed -i  "s/XKBLAYOUT=../XKBLAYOUT=de/g" /etc/default/keyboard
+sudo sed -i  "s/XKBLAYOUT=../XKBLAYOUT=\"de\"/g" /etc/default/keyboard
 
 #Disable ipv6
 sudo sed -i -e '$ a net.ipv6.conf.all.disable_ipv6 = 1' /etc/sysctl.conf

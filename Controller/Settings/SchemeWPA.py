@@ -5,7 +5,9 @@ from wifi import Cell, Scheme
 import wifi.subprocess_compat as subprocess
 from wifi.utils import ensure_file_exists
 
-
+"""
+This patches the Scheme class from wifi, as it only uses /etc/network/interface instead of wpa_supplicant.conf
+"""
 class SchemeWPA(Scheme):
     interfaces = "/etc/wpa_supplicant/wpa_supplicant.conf"
 
@@ -48,9 +50,9 @@ class SchemeWPA(Scheme):
         """
         Connects to the network as configured in this scheme.
         """
-        subprocess.check_output(["sudo", "/sbin/ifdown", self.interface], stderr=subprocess.STDOUT)
-        time.sleep(5)
-        ifup_output = subprocess.check_output(["sudo", "/sbin/ifup", self.interface], stderr=subprocess.STDOUT)
+        subprocess.check_output(["sudo", "/sbin/ifconfig", self.interface, "down"], stderr=subprocess.STDOUT)
+        time.sleep(2)
+        ifup_output = subprocess.check_output(["sudo", "/sbin/ifconfig", self.interface, "up"], stderr=subprocess.STDOUT)
         ifup_output = ifup_output.decode('utf-8')
 
     def delete(self):
