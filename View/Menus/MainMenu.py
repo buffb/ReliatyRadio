@@ -10,6 +10,9 @@ class MainMenu(QtWidgets.QWidget):
         super().__init__(parent)
         self.setup_ui()
 
+        self.toolButton_settings.clicked.connect(self.show_settings)
+        self.toolButton_player.clicked.connect(self.show_webradio)
+
     def setup_ui(self):
 
         icon = QtGui.QIcon()
@@ -72,8 +75,7 @@ class MainMenu(QtWidgets.QWidget):
         self.label_logo.setText("")
         self.label_logo.setObjectName("label_logo")
 
-        self.toolButton_settings.clicked.connect(self.show_settings)
-        self.toolButton_player.clicked.connect(self.show_webradio)
+
 
     def show_settings(self):
         widget = SettingsMenu()
@@ -83,4 +85,3 @@ class MainMenu(QtWidgets.QWidget):
     def show_webradio(self):
         widget = ReliatyPlayer()
         self.nativeParentWidget().add_and_show_widget(widget)
-        #TODO Back Button

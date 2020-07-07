@@ -11,6 +11,8 @@ from Controller.Update.ReliatyUpdater import ReliatyUpdater
 class SettingsController(QtCore.QObject):
     status_updated = QtCore.pyqtSignal(str)
     ip_updated = QtCore.pyqtSignal(str)
+    update_btn_updated = QtCore.pyqtSignal(str)
+    finished = QtCore.pyqtSignal()
 
     def __init__(self, menu):
         super().__init__()
@@ -41,16 +43,22 @@ class SettingsController(QtCore.QObject):
                 self.status_updated.emit("Fehler bei der Verbindungsaufnahme")
                 e = sys.exc_info()[0]
                 pass
+            finally:
+                self.finished.emit()
 
+    @QtCore.pyqtSlot()
     def update_software(self):
-        self.menu.update_btn.setText("Suche nach Updates..")
+        self.update_btn_updated.emit("Suche nach Updates..")
         updater = ReliatyUpdater()
         if updater.check_for_update():
+            self.update_btn_updated.emit("Downloade Update..")
             success = updater.do_update()
             if success:
                 self.restart()
-
-        return False
+            self.update_btn_updated.emit("Fehler beim Update")
+            return
+        self.update_btn_updated.emit("Keine Updates verfügbar")
+        self.finished.emit()
 
     def restart(self):
         import subprocess

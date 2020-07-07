@@ -39,10 +39,12 @@ class DatabaseController:
             return genres[:]
         return genres[:amount:]
 
-    def get_stations_by_last_played(self):
-        return Webradio.select().order_by(desc(Webradio.last_played),desc(Webradio.popularity))
+    def get_stations_by_last_played(self,limit=20):
+        return Webradio.select().order_by(desc(Webradio.last_played),desc(Webradio.popularity)).limit(limit)
 
 
+
+    """Test method. Do not use unless you know what you're doing"""
     @db_session
     def populate_database(self):
         rock = Genre(name="Rock")

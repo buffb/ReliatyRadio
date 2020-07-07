@@ -31,10 +31,9 @@ class ReliatyPlayer(QtWidgets.QWidget):
 
         # Start with last played station
         with db_session:
-            station = self.db.get_stations_by_last_played().first()
+            station = self.db.get_stations_by_last_played()[0]
             self.change_station(station)
         self.setup_buttons()
-        self.populate_wigets()
 
     def setup_ui(self):
         self.centralwidget.setStyleSheet("background-color: rgb(255, 255, 255);")
@@ -255,6 +254,7 @@ class ReliatyPlayer(QtWidgets.QWidget):
                     widget.disconnect()  # prohibit multiple connections
                     widget.clicked.connect(self.on_change_station)
                     unpopulated = False
+            return
 
     def setup_player(self):
         if self.station is not None:

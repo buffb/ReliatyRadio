@@ -15,6 +15,7 @@ class SettingsMenu(QtWidgets.QWidget):
         #Connect slots
         self.controller.status_updated.connect(self.update_status)
         self.controller.ip_updated.connect(self.update_ip)
+        self.controller.update_btn_updated.connect(self.update_update_btn)
 
         self.btn_wifi__connect.clicked.connect(self.connect_to_wifi)
         self.btn_update.clicked.connect(self.check_for_update)
@@ -24,6 +25,7 @@ class SettingsMenu(QtWidgets.QWidget):
         #Start Background Worker
         self.controller.moveToThread(self.thread)
         self.thread.start()
+        self.controller.finished.connect(self.thread.quit)
 
         self.update_status(self.controller.get_status())
         self.update_ip(self.controller.get_ip())
@@ -34,21 +36,24 @@ class SettingsMenu(QtWidgets.QWidget):
 
 
     def connect_to_wifi(self):
+        self.thread.start()
         QtCore.QMetaObject.invokeMethod(self.controller,"connect_wifi", Qt.QueuedConnection,
                                         QtCore.Q_ARG(str, self.ssid_input.text()),
                                         QtCore.Q_ARG(str, self.wifi_pwd_input.text()))
 
     def check_for_update(self):
-        self.controller.update_software()
+        QtCore.QMetaObject.invokeMethod(self.controller,"update_software", Qt.QueuedConnection)
         #Will not excecute if restarted after update was necessary
         self.btn_update.setEnabled(False)
-        self.btn_update.setText("Kein Update verfügbar")
 
     def update_status(self,status):
         self.label_status2.setText(status)
 
     def update_ip(self,ip):
         self.label_ip2.setText(ip)
+
+    def update_update_btn(self,text):
+        self.btn_update.setText(text)
 
 
     def setup_ui(self):
