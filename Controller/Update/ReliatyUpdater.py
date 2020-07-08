@@ -1,5 +1,6 @@
 import os
 import shutil
+import sys
 
 import git
 
@@ -11,15 +12,17 @@ class ReliatyUpdater:
 
     def check_for_update(self):
         try:
+            abspath = os.path.abspath(__file__)
+            dname = os.path.dirname(abspath)
+            os.chdir(dname)
             self.repo = git.Repo(search_parent_directories=True)
+            os.chdir(self.repo.working_dir)
         except:
             # Creating a clean setup by wiping program folder
-            tmp = os.getcwd()
-            os.chdir("../")
-            shutil.rmtree(tmp)
-            # Get current version from Github
+            shutil.rmtree("/opt/ReliatyRadio/")
+            #Get current version from Github
             self.repo = git.Git().clone("https://github.com/buffb/ReliatyRadio.git")
-            os.chdir(tmp) # Change back cwd to fit with recursion
+            os.chdir("/opt/ReliatyRadio/") # Change back cwd to fit with recursion
             self.check_for_update()
             return
 
